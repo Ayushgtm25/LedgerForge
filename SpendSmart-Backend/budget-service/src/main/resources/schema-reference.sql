@@ -1,0 +1,14 @@
+-- Reference schema for budget-service.
+CREATE TABLE IF NOT EXISTS budgets (
+  budget_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  category_id BIGINT NOT NULL,
+  budget_limit DECIMAL(14,2) NOT NULL,
+  spent_amount DECIMAL(14,2) NOT NULL DEFAULT 0,
+  currency VARCHAR(10) NOT NULL,
+  period VARCHAR(30) NOT NULL,
+  alert_threshold INT,
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);

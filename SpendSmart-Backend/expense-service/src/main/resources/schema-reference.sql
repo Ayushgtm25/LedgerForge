@@ -1,0 +1,17 @@
+-- Reference schema for expense-service.
+CREATE TABLE IF NOT EXISTS expenses (
+  expense_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  category_id BIGINT,
+  title VARCHAR(255) NOT NULL,
+  amount DECIMAL(14,2) NOT NULL,
+  currency VARCHAR(10) NOT NULL,
+  type VARCHAR(30) NOT NULL,
+  payment_method VARCHAR(30) NOT NULL,
+  date DATE NOT NULL,
+  notes TEXT,
+  receipt_url VARCHAR(1024),
+  is_recurring BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);

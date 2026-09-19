@@ -1,0 +1,119 @@
+server:
+  port: ${SERVER_PORT}
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: auth-service
+
+  # JPA/Hibernate Configuration
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    show-sql: false
+    open-in-view: false
+
+  # MySQL Database Configuration
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?useSSL=${DB_USE_SSL}&serverTimezone=UTC&allowPublicKeyRetrieval=true&allowLoadLocal=false
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+
+
+
+  # Security Configuration
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${MY_ID}
+            client-secret: ${MY_CODE}
+            redirect-uri: ${GOOGLE_REDIRECT_URI}
+            scope: profile,email
+            client-name: Google
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+      timeout: 2s
+
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USER}
+    password: ${RABBITMQ_PASSWORD}
+
+  # Jackson Configuration
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+      indent-output: true
+    deserialization:
+      fail-on-unknown-properties: false
+
+  # Logging Configuration
+  logging:
+    config: classpath:logback-spring.xml
+
+# Eureka Client Configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL}
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+    metadata-map:
+      service: ${spring.application.name}
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: 86400000  # 24 hours
+  refresh-expiration: 604800000  # 7 days
+
+# Logging configuration
+logging:
+  level:
+    root: INFO
+    com.spendsmart.auth: DEBUG
+  file:
+    name: logs/auth-service.log
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 30
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+app:
+  oauth2:
+    redirect-success-url: ${OAUTH2_SUCCESS_REDIRECT_URL}
+    redirect-failure-url: ${OAUTH2_FAILURE_REDIRECT_URL}
+  messaging:
+    auth-notification-exchange: ${AUTH_NOTIFICATION_EXCHANGE}
+    auth-notification-routing-key: ${AUTH_NOTIFICATION_ROUTING_KEY}
+    auth-notification-queue: ${AUTH_NOTIFICATION_QUEUE}
+

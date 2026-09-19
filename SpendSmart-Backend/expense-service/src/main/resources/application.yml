@@ -1,0 +1,85 @@
+server:
+  port: ${SERVER_PORT:8082}
+  servlet:
+    context-path: /
+spring:
+  application:
+    name: expense-service
+  # JPA/Hibernate Configuration
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    show-sql: false
+    open-in-view: false
+  # MySQL Database Configuration
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:spendsmart_expense}?allowPublicKeyRetrieval=true&useSSL=${DB_USE_SSL:false}&serverTimezone=UTC
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+  # Jackson Configuration
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+      indent-output: true
+    deserialization:
+      fail-on-unknown-properties: false
+  # Logging Configuration (SLF4J/Logback)
+  logging:
+    config: classpath:logback-spring.xml
+# Eureka Client Configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+    metadata-map:
+      service: ${spring.application.name}
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:M4b4B1mesNla14a3Okeb89NVfQOqQnvfsF5rHL+raGqYntqOt++6qIa3J5bFfEvnhoNEOkxE07T0vLW1S44BIg==}
+  expiration: 86400000
+# Inter-Service Configuration (Budget Service)
+services:
+  budget-service:
+    url: ${BUDGET_SERVICE_URL:http://localhost:8083}
+    endpoints:
+      update-spent-amount: /budgets/spent
+# Local Receipt Storage
+receipt:
+  storage:
+    path: ${RECEIPT_STORAGE_PATH:./receipts}
+
+# Logging configuration
+logging:
+  level:
+    root: INFO
+    com.spendsmart.expense: DEBUG
+    org.springframework.security: INFO
+  file:
+    name: logs/expense-service.log
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 30
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html

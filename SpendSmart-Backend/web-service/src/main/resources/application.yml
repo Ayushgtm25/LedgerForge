@@ -1,0 +1,121 @@
+spring:
+  application:
+    name: web-service
+  cloud:
+    gateway:
+      routes:
+        # Authentication Service
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth/**,/oauth2/**,/login/oauth2/**
+
+        # Admin broadcasts (notification-service)
+        - id: admin-notifications
+          uri: lb://NOTIFICATION-SERVICE
+          predicates:
+            - Path=/admin/notifications/**
+
+        # Expense Service
+        - id: expense-service
+          uri: lb://EXPENSE-SERVICE
+          predicates:
+            - Path=/expenses/**
+
+        # Income Service
+        - id: income-service
+          uri: lb://INCOME-SERVICE
+          predicates:
+            - Path=/incomes/**
+
+        # Category Service
+        - id: category-service
+          uri: lb://CATEGORY-SERVICE
+          predicates:
+            - Path=/categories/**
+
+        # Budget Service
+        - id: budget-service
+          uri: lb://BUDGET-SERVICE
+          predicates:
+            - Path=/budgets/**
+
+        # Analytics Service
+        - id: analytics-service
+          uri: lb://ANALYTICS-SERVICE
+          predicates:
+            - Path=/analytics/**
+
+        # Recurring Service
+        - id: recurring-service
+          uri: lb://RECURRING-SERVICE
+          predicates:
+            - Path=/recurring/**
+
+        # Notification Service
+        - id: notification-service
+          uri: lb://NOTIFICATION-SERVICE
+          predicates:
+            - Path=/notifications/**
+
+        # Admin Routes (routed by path prefix to appropriate services)
+        - id: admin-auth
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/admin/users/**
+
+        - id: admin-expenses
+          uri: lb://EXPENSE-SERVICE
+          predicates:
+            - Path=/admin/expenses/**
+
+        - id: admin-incomes
+          uri: lb://INCOME-SERVICE
+          predicates:
+            - Path=/admin/incomes/**
+
+        - id: admin-categories
+          uri: lb://CATEGORY-SERVICE
+          predicates:
+            - Path=/admin/categories/**
+
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials Access-Control-Expose-Headers, RETAIN_FIRST
+        - AddResponseHeader=X-Frame-Options,DENY
+        - AddResponseHeader=X-Content-Type-Options,nosniff
+        - AddResponseHeader=X-XSS-Protection,"1; mode=block"
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  health:
+    circuitbreaker:
+      enabled: true
+
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.security: DEBUG
+

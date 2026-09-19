@@ -1,0 +1,13 @@
+-- Reference schema for category-service.
+CREATE TABLE IF NOT EXISTS categories (
+  category_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  name VARCHAR(120) NOT NULL,
+  type VARCHAR(30) NOT NULL,
+  color VARCHAR(20),
+  icon VARCHAR(60),
+  is_default BOOLEAN NOT NULL DEFAULT FALSE,
+  budget_limit DECIMAL(14,2),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);

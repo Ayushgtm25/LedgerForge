@@ -1,0 +1,15 @@
+target/
+.idea/
+.git/
+.gitignore
+.dockerignore
+.env
+*.log
+logs/
+node_modules/
+.DS_Store
+*.iml
+.mvn/
+mvnw
+mvnw.cmd
+

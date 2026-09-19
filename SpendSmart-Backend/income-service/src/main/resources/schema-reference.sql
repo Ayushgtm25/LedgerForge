@@ -1,0 +1,16 @@
+-- Reference schema for income-service.
+CREATE TABLE IF NOT EXISTS incomes (
+  income_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  category_id BIGINT,
+  title VARCHAR(255) NOT NULL,
+  amount DECIMAL(14,2) NOT NULL,
+  currency VARCHAR(10) NOT NULL,
+  source VARCHAR(30) NOT NULL,
+  date DATE NOT NULL,
+  notes TEXT,
+  is_recurring BOOLEAN NOT NULL DEFAULT FALSE,
+  recurrence_period VARCHAR(30),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
